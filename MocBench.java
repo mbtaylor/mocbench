@@ -6,10 +6,10 @@ public abstract class MocBench {
     abstract MocBuilder createBuilder( int order ) throws Exception;
 
     void runBench() {
-        runBench( 10, 10_000_000, new Random( 9999L ) );
+        runBench( 10, 10_000_000, new Random( 9999L ), false );
     }
 
-    void runBench( int order, long np, Random rnd ) {
+    void runBench( int order, long np, Random rnd, boolean writeFits ) {
         long prog = Math.max( np / 60, 1 );
         int maxval = 12 << ( 2 * order );
         long start = System.currentTimeMillis();
@@ -34,6 +34,16 @@ public abstract class MocBench {
                           + "Pixels: " + builder.getPixelCount() );
         System.out.println( "   Time: "
                           + ( System.currentTimeMillis() - start ) );
+        if ( writeFits ) {
+            String fname = getClass().getSimpleName() + ".fits";
+            System.out.println( "   Result at: " + fname );
+            try {
+                builder.writeFits( fname );
+            }
+            catch ( Exception e ) {
+                throw new RuntimeException( e );
+            }
+        }
     }
 
     interface MocBuilder {
@@ -41,5 +51,6 @@ public abstract class MocBench {
         public void end() throws Exception;
         public double getCoverage();
         public long getPixelCount();
+        public void writeFits( String filename ) throws Exception;
     }
 }

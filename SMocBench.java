@@ -21,6 +21,9 @@ public class SMocBench extends MocBench {
             public long getPixelCount() {
                 return smoc.getNbCoding();
             }
+            public void writeFits( String filename ) throws Exception {
+                smoc.writeFITS( filename );
+            }
         };
     }
 

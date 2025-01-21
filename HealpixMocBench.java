@@ -1,5 +1,6 @@
 
 import cds.moc.HealpixMoc;
+import java.io.FileOutputStream;
 
 public class HealpixMocBench extends MocBench {
 
@@ -19,6 +20,11 @@ public class HealpixMocBench extends MocBench {
             }
             public long getPixelCount() {
                 return hmoc.getSize();
+            }
+            public void writeFits( String filename ) throws Exception {
+                try ( FileOutputStream out = new FileOutputStream( filename ) ){
+                    hmoc.writeFits( out );
+                }
             }
         };
     }
