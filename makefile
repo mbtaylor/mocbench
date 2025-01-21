@@ -50,6 +50,7 @@ mocbench2.jar: MocBench.java SMocBench.java JavaMoc2.jar
 clean:
 	rm -rf tmp
 	rm -f mocbench1.jar mocbench2.jar profile1.html profile2.html
+	rm -f HealpixMocBench.fits SMocBench.fits
 
 veryclean: clean
 	rm -f Moc.jar JavaMoc2.jar libasyncProfiler.so
