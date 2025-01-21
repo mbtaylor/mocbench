@@ -18,7 +18,7 @@ public abstract class MocBench {
             builder = createBuilder( order );
             for ( int ip = 0; ip < np; ip++ ) {
                 if ( ip % prog == 0 ) System.out.print( '.' );
-                long val = rnd.nextLong() % maxval;
+                long val = Math.abs( rnd.nextLong() ) % maxval;
                 builder.add( order, val );
             }
             System.out.println();
