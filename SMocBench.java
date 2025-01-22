@@ -1,5 +1,8 @@
 
+import cds.moc.Moc;
 import cds.moc.SMoc;
+import java.util.stream.LongStream;
+import java.util.stream.StreamSupport;
 
 public class SMocBench extends MocBench {
 
@@ -20,6 +23,11 @@ public class SMocBench extends MocBench {
             }
             public long getPixelCount() {
                 return smoc.getNbCoding();
+            }
+            public LongStream getUniqs() {
+                return StreamSupport
+                      .stream( smoc.spliterator(), false )
+                      .mapToLong( c -> Moc.hpix2uniq( c.order, c.start ) );
             }
             public void writeFits( String filename ) throws Exception {
                 smoc.writeFITS( filename );

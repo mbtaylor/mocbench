@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.LongStream;
+import java.util.zip.Adler32;
+import java.util.zip.Checksum;
 
 public abstract class MocBench {
 
@@ -84,6 +87,20 @@ public abstract class MocBench {
                           + "Pixels: " + assembler.getPixelCount() );
         System.out.println( "   Time: "
                           + ( System.currentTimeMillis() - start ) );
+        Checksum cksum = new Adler32();
+        assembler.getUniqs()
+                 .forEach( l -> {
+                              cksum.update( (byte) ( l >>> 56 ) );
+                              cksum.update( (byte) ( l >>> 48 ) );
+                              cksum.update( (byte) ( l >>> 40 ) );
+                              cksum.update( (byte) ( l >>> 32 ) );
+                              cksum.update( (byte) ( l >>> 24 ) );
+                              cksum.update( (byte) ( l >>> 16 ) );
+                              cksum.update( (byte) ( l >>>  8 ) );
+                              cksum.update( (byte) ( l >>>  0 ) );
+                           } );
+        System.out.println( "   Checksum: "
+                          + Long.toHexString( cksum.getValue() ) );
         if ( writeFits ) {
             String fname = getClass().getSimpleName() + ".fits";
             System.out.println( "   Result at: " + fname );
@@ -101,6 +118,7 @@ public abstract class MocBench {
         public void end() throws Exception;
         public double getCoverage();
         public long getPixelCount();
+        public LongStream getUniqs();
         public void writeFits( String filename ) throws Exception;
     }
 }

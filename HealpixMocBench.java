@@ -1,6 +1,8 @@
 
 import cds.moc.HealpixMoc;
 import java.io.FileOutputStream;
+import java.util.stream.LongStream;
+import java.util.stream.StreamSupport;
 
 public class HealpixMocBench extends MocBench {
 
@@ -20,6 +22,13 @@ public class HealpixMocBench extends MocBench {
             }
             public long getPixelCount() {
                 return hmoc.getSize();
+            }
+            public LongStream getUniqs() {
+                return StreamSupport
+                      .stream( hmoc.spliterator(), false )
+                      .mapToLong( c -> HealpixMoc.hpix2uniq( c.order,
+                                                             c.npix ) );
+
             }
             public void writeFits( String filename ) throws Exception {
                 try ( FileOutputStream out = new FileOutputStream( filename ) ){
