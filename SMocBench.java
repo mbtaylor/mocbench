@@ -3,12 +3,12 @@ import cds.moc.SMoc;
 
 public class SMocBench extends MocBench {
 
-    MocBuilder createBuilder( int mocOrder ) {
+    MocAssembler createAssembler( int mocOrder ) {
         SMoc smoc = new SMoc( mocOrder );
         // Using a non-default buffer size here helps, but it's still slow.
         // smoc.bufferOn();
         smoc.bufferOn( 500_000 );
-        return new MocBuilder() {
+        return new MocAssembler() {
             public void add( int order, long val ) throws Exception {
                 smoc.add( order, val );
             }

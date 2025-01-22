@@ -4,10 +4,10 @@ import java.io.FileOutputStream;
 
 public class HealpixMocBench extends MocBench {
 
-    MocBuilder createBuilder( int mocOrder ) throws Exception {
+    MocAssembler createAssembler( int mocOrder ) throws Exception {
         HealpixMoc hmoc = new HealpixMoc( mocOrder );
         hmoc.setCheckConsistencyFlag( false );
-        return new MocBuilder() {
+        return new MocAssembler() {
             public void add( int order, long val ) throws Exception {
                 hmoc.add( order, val );
             }
