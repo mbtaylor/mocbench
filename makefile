@@ -11,6 +11,7 @@ XMOC_SRC = xmoc/ArraysMoc.java \
            xmoc/BitSetBag.java \
            xmoc/IndexBag.java \
            xmoc/IndexBags.java \
+           xmoc/IntegerBag.java \
            xmoc/LongBag.java \
            xmoc/MocBuilder.java \
            xmoc/PrimitiveList.java \
