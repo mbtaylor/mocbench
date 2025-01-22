@@ -1,9 +1,59 @@
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public abstract class MocBench {
 
     abstract MocBuilder createBuilder( int order ) throws Exception;
+
+    void runBench( String[] args ) {
+        List<String> argList = new ArrayList<String>( Arrays.asList( args ) );
+        int order = 10;
+        long count = 10_000_000;
+        boolean writeFits = false;
+        String usage = new StringBuffer()
+           .append( getClass().getSimpleName() )
+           .append( " [-help]" )
+           .append( " [-order <n>]" )
+           .append( " [-count <n>]" )
+           .append( " [-fits]" )
+           .toString();
+        for ( Iterator<String> argIt = argList.iterator(); argIt.hasNext(); ) {
+            String arg = argIt.next();
+            if ( arg.startsWith( "-h" ) ) {
+                argIt.remove();
+                System.err.println( usage );
+                return;
+            }
+            else if ( "-order".equalsIgnoreCase( arg ) && argIt.hasNext() ) {
+                argIt.remove();
+                order = Integer.parseInt( argIt.next().replaceAll( "_", "" ) );
+                argIt.remove();
+            }
+            else if ( "-count".equalsIgnoreCase( arg ) && argIt.hasNext() ) {
+                argIt.remove();
+                count = Long.parseLong( argIt.next().replaceAll( "_", "" ) );
+                argIt.remove();
+            }
+            else if ( "-fits".equalsIgnoreCase( arg ) ) {
+                argIt.remove();
+                writeFits = true;
+            }
+            else {
+                System.err.println( usage );
+                return;
+            }
+        }
+        if ( ! argList.isEmpty() ) {
+            System.err.println( usage );
+            return;
+        }
+        Random rnd = new Random( 9999L );
+        runBench( order, count, rnd, writeFits );
+    }
 
     void runBench() {
         runBench( 10, 10_000_000, new Random( 9999L ), false );

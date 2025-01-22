@@ -4,19 +4,22 @@
 # Make runflame will produce profiling flamegraphs, as long as a
 # working libasyncProfiler.so gets downloaded.
 
+COUNT = 10_000_000
+ORDER = 10
+
 run: build
-	java -jar mocbench1.jar
+	java -jar mocbench1.jar -order $(ORDER) -count $(COUNT)
 	@echo
-	java -jar mocbench2.jar
+	java -jar mocbench2.jar -order $(ORDER) -count $(COUNT)
 
 runflame: profile1.html profile2.html
 
-profile1.html: libasyncProfiler.so mocbench1.jar
+profile1.html: libasyncProfiler.so mocbench1.jar -order $(ORDER) -count $(COUNT)
 	java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints \
              -agentpath:./libasyncProfiler.so=start,file=$@ \
              -jar mocbench1.jar
 
-profile2.html: libasyncProfiler.so mocbench2.jar
+profile2.html: libasyncProfiler.so mocbench2.jar -order $(ORDER) -count $(COUNT)
 	java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints \
              -agentpath:./libasyncProfiler.so=start,file=$@ \
              -jar mocbench2.jar

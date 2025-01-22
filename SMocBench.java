@@ -28,6 +28,6 @@ public class SMocBench extends MocBench {
     }
 
     public static void main( String[] args ) {
-        new SMocBench().runBench();
+        new SMocBench().runBench( args );
     }
 }

@@ -30,6 +30,6 @@ public class HealpixMocBench extends MocBench {
     }
 
     public static void main( String[] args ) {
-        new HealpixMocBench().runBench();
+        new HealpixMocBench().runBench( args );
     }
 }
