@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.util.PrimitiveIterator;
 import java.util.stream.LongStream;
 import xmoc.MocBuilder;
 import xmoc.ArraysMoc;
@@ -23,10 +24,13 @@ public class XMocBench extends MocBench {
                 return moc_.getPixelCount();
             }
             public void writeFits( String filename ) throws IOException {
-                moc_.nuniqStream().forEach( l -> System.out.println( l ) );
+                moc_.uniqStream().forEach( l -> System.out.println( l ) );
             }
             public LongStream getUniqs() {
-                return moc_.nuniqStream();
+                return moc_.uniqStream();
+            }
+            public PrimitiveIterator.OfLong uniqIterator() {
+                return moc_.uniqIterator();
             }
         };
     }

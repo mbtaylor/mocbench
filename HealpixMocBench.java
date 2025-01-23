@@ -1,6 +1,9 @@
 
 import cds.moc.HealpixMoc;
+import cds.moc.MocCell;
 import java.io.FileOutputStream;
+import java.util.Iterator;
+import java.util.PrimitiveIterator;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
 
@@ -29,6 +32,18 @@ public class HealpixMocBench extends MocBench {
                       .mapToLong( c -> HealpixMoc.hpix2uniq( c.order,
                                                              c.npix ) );
 
+            }
+            public PrimitiveIterator.OfLong uniqIterator() {
+                Iterator<MocCell> cellIt = hmoc.iterator();
+                return new PrimitiveIterator.OfLong() {
+                    public boolean hasNext() {
+                        return cellIt.hasNext();
+                    }
+                    public long nextLong() {
+                        MocCell cell = cellIt.next();
+                        return HealpixMoc.hpix2uniq( cell.order, cell.npix );
+                    }
+                };
             }
             public void writeFits( String filename ) throws Exception {
                 try ( FileOutputStream out = new FileOutputStream( filename ) ){

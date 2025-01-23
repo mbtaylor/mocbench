@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.stream.LongStream;
 import java.util.zip.Adler32;
@@ -88,19 +89,15 @@ public abstract class MocBench {
         System.out.println( "   Time: "
                           + ( System.currentTimeMillis() - start ) );
         Checksum cksum = new Adler32();
-        assembler.getUniqs()
-                 .forEach( l -> {
-                              cksum.update( (byte) ( l >>> 56 ) );
-                              cksum.update( (byte) ( l >>> 48 ) );
-                              cksum.update( (byte) ( l >>> 40 ) );
-                              cksum.update( (byte) ( l >>> 32 ) );
-                              cksum.update( (byte) ( l >>> 24 ) );
-                              cksum.update( (byte) ( l >>> 16 ) );
-                              cksum.update( (byte) ( l >>>  8 ) );
-                              cksum.update( (byte) ( l >>>  0 ) );
-                           } );
-        System.out.println( "   Checksum: "
-                          + Long.toHexString( cksum.getValue() ) );
+        assembler.getUniqs().forEach( uniq -> updateChecksum( cksum, uniq ) );
+        long checkValue = cksum.getValue();
+        Checksum cksum1 = new Adler32();
+        for ( PrimitiveIterator.OfLong uniqIt = assembler.uniqIterator();
+              uniqIt.hasNext(); ) {
+            updateChecksum( cksum1, uniqIt.nextLong() );
+        }
+        assertTrue( cksum1.getValue() == checkValue );
+        System.out.println( "   Checksum: " + Long.toHexString( checkValue ) );
         if ( writeFits ) {
             String fname = getClass().getSimpleName() + ".fits";
             System.out.println( "   Result at: " + fname );
@@ -113,12 +110,30 @@ public abstract class MocBench {
         }
     }
 
+    private static void assertTrue( boolean assertion ) {
+        if ( ! assertion ) {
+            throw new AssertionError();
+        }
+    }
+
+    private static void updateChecksum( Checksum cksum, long lvalue ) {
+        cksum.update( (byte) ( lvalue >>> 56 ) );
+        cksum.update( (byte) ( lvalue >>> 48 ) );
+        cksum.update( (byte) ( lvalue >>> 40 ) );
+        cksum.update( (byte) ( lvalue >>> 32 ) );
+        cksum.update( (byte) ( lvalue >>> 24 ) );
+        cksum.update( (byte) ( lvalue >>> 16 ) );
+        cksum.update( (byte) ( lvalue >>>  8 ) );
+        cksum.update( (byte) ( lvalue >>>  0 ) );
+    }
+
     interface MocAssembler {
         public void add( int order, long val ) throws Exception;
         public void end() throws Exception;
         public double getCoverage();
         public long getPixelCount();
         public LongStream getUniqs();
+        public PrimitiveIterator.OfLong uniqIterator();
         public void writeFits( String filename ) throws Exception;
     }
 }

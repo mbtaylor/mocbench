@@ -1,6 +1,9 @@
 
 import cds.moc.Moc;
+import cds.moc.MocCell;
 import cds.moc.SMoc;
+import java.util.Iterator;
+import java.util.PrimitiveIterator;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
 
@@ -28,6 +31,18 @@ public class SMocBench extends MocBench {
                 return StreamSupport
                       .stream( smoc.spliterator(), false )
                       .mapToLong( c -> Moc.hpix2uniq( c.order, c.start ) );
+            }
+            public PrimitiveIterator.OfLong uniqIterator() {
+                Iterator<MocCell> cellIt = smoc.iterator();
+                return new PrimitiveIterator.OfLong() {
+                    public boolean hasNext() {
+                        return cellIt.hasNext();
+                    }
+                    public long nextLong() {
+                        MocCell cell = cellIt.next();
+                        return Moc.hpix2uniq( cell.order, cell.start );
+                    }
+                };
             }
             public void writeFits( String filename ) throws Exception {
                 smoc.writeFITS( filename );
