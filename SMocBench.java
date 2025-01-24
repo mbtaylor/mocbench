@@ -13,16 +13,42 @@ public class SMocBench extends MocBench {
 
     private int batchSize_;
 
-    SMocBench() {
-        batchSize_ = 1;
+    SMocBench( int batchSize ) {
+        batchSize_ = batchSize;
     }
 
     MocAssembler createAssembler( int mocOrder ) {
-        return new SMocAssembler( mocOrder ) {
-            public void add( int order, long val ) throws Exception {
-                smoc_.add( order, val );
-            }
-        };
+        if ( batchSize_ == 1 ) {
+            return new SMocAssembler( mocOrder ) {
+                public void add( int order, long val ) throws Exception {
+                    smoc_.add( order, val );
+                }
+            };
+        }
+        else {
+            return new SMocAssembler( mocOrder ) {
+                final int bufsiz_ = batchSize_;
+                final long[] buf_ =  new long[ bufsiz_ ];
+                int ib_;
+                int order_;
+		public void add( int order, long val ) throws Exception {
+                    if ( order != order_ || ib_ >= bufsiz_ ) {
+                        flush();
+                        order_ = order;
+                    }
+                    buf_[ ib_++ ] = val;
+                }
+                @Override
+                public void end() {
+                    flush();
+                    super.end();
+                }
+                private void flush() {
+                    smoc_.add( order_, buf_, ib_ );
+                    ib_ = 0;
+                }
+            };
+        }
     }
 
     private static abstract class SMocAssembler implements MocAssembler {
@@ -97,6 +123,6 @@ public class SMocBench extends MocBench {
     }
 
     public static void main( String[] args ) {
-        new SMocBench().runBench( args );
+        new SMocBench( 1_000_000 ).runBench( args );
     }
 }
