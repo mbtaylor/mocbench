@@ -54,10 +54,11 @@ mocbench1.jar: MocBench.java HealpixMocBench.java Moc.jar
 	cd tmp; jar xf ../Moc.jar; jar cfe ../$@ HealpixMocBench .
 	rm -rf tmp
 
-mocbench2.jar: MocBench.java SMocBench.java JavaMoc2.jar
+mocbench2.jar: MocBench.java SMocBench.java SMoc1.java JavaMoc2.jar
 	rm -rf tmp
 	mkdir -p tmp
-	javac -classpath JavaMoc2.jar MocBench.java SMocBench.java -d tmp
+	javac -classpath JavaMoc2.jar -d tmp \
+              MocBench.java SMocBench.java SMoc1.java
 	cd tmp; jar xf ../JavaMoc2.jar; jar cfe ../$@ SMocBench .
 	rm -rf tmp
 
