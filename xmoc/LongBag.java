@@ -3,6 +3,7 @@ package xmoc;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.LongStream;
 
 public class LongBag implements IndexBag {
 
@@ -30,9 +31,9 @@ public class LongBag implements IndexBag {
         }
     }
 
-    public long[] sortedLongs() {
+    public LongStream sortedLongs() {
         drainSet();
-        return sortedLongs_;
+        return Arrays.stream( sortedLongs_ );
     }
 
     private void drainSet() {

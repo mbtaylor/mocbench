@@ -3,6 +3,7 @@ package xmoc;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.PrimitiveIterator;
 import uk.ac.starlink.util.LongList;
 
 public class MocBuilder {
@@ -42,7 +43,9 @@ public class MocBuilder {
                     long iquad = -1;
                     long[] quadMembers = new long[ 4 ];
                     int quadCount = 0;
-                    for ( long index : bag.sortedLongs() ) {
+                    for ( PrimitiveIterator.OfLong ixIt =
+                              bag.sortedLongs().iterator(); ixIt.hasNext(); ) {
+                        long index = ixIt.nextLong();
                         long iq = index >> 2;
                         if ( iq != iquad ) {
                             if ( quadCount == 4 && ilevel > 0 ) {

@@ -1,5 +1,7 @@
 package xmoc;
 
+import java.util.stream.LongStream;
+
 public interface IndexBag {
 
     // Not necessary
@@ -8,7 +10,5 @@ public interface IndexBag {
     // Value must be in range.
     void addIndex( long index );
 
-    // Do not write to this array.
-    // Maybe replace this with a LongIterator.
-    long[] sortedLongs();
+    LongStream sortedLongs();
 }

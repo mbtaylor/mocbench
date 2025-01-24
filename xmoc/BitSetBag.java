@@ -1,6 +1,7 @@
 package xmoc;
 
 import java.util.BitSet;
+import java.util.stream.LongStream;
 
 public class BitSetBag implements IndexBag {
 
@@ -22,16 +23,7 @@ public class BitSetBag implements IndexBag {
         return bitset_.get( (int) lval );
     }
 
-    public long[] sortedLongs() {
-        long[] array = new long[ bitset_.cardinality() ];
-        int j = 0;
-        for ( int i = bitset_.nextSetBit( 0 ); i >= 0;
-              i = bitset_.nextSetBit( i + 1 ) ) {
-            array[ j++ ] = i;
-            if ( i == Integer.MAX_VALUE ) {
-                break;
-            }
-        }
-        return array;
+    public LongStream sortedLongs() {
+        return bitset_.stream().asLongStream();
     }
 }
