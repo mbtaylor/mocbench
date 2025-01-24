@@ -15,10 +15,6 @@ public class BitSetBag implements IndexBag {
         bitset_.set( (int) lval );
     }
 
-    public void removeIndex( long lval ) {
-        bitset_.clear( (int) lval );
-    }
-
     public boolean hasIndex( long lval ) {
         return bitset_.get( (int) lval );
     }
