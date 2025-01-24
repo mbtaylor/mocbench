@@ -7,6 +7,8 @@
 COUNT = 10_000_000
 ORDER = 10
 
+BUILT_JARS = mocbench1.jar mocbench2.jar xmocbench.jar xsmocbench.jar xmoc.jar
+
 XMOC_SRC = xmoc/ArraysMoc.java \
            xmoc/BitSetBag.java \
            xmoc/IndexBag.java \
@@ -19,6 +21,8 @@ XMOC_SRC = xmoc/ArraysMoc.java \
 
 run: build
 	java -jar xmocbench.jar -order $(ORDER) -count $(COUNT)
+	@echo
+	java -jar xsmocbench.jar -order $(ORDER) -count $(COUNT)
 	@echo
 	java -jar mocbench1.jar -order $(ORDER) -count $(COUNT)
 	@echo
@@ -36,7 +40,7 @@ profile2.html: libasyncProfiler.so mocbench2.jar -order $(ORDER) -count $(COUNT)
              -agentpath:./libasyncProfiler.so=start,file=$@ \
              -jar mocbench2.jar
 
-build: mocbench1.jar mocbench2.jar xmocbench.jar
+build: $(BUILT_JARS)
 
 JavaMoc2.jar:
 	curl -O https://wiki.ivoa.net/internal/IVOA/MocInfo/JavaMoc2.jar
@@ -69,6 +73,15 @@ xmocbench.jar: MocBench.java XMocBench.java xmoc.jar
 	cd tmp; jar xf ../xmoc.jar; jar cfe ../$@ XMocBench .
 	rm -rf tmp
 
+xsmocbench.jar: MocBench.java XSMocBench.java SMoc1.java xmoc.jar JavaMoc2.jar
+	rm -rf tmp
+	mkdir -p tmp
+	javac -classpath xmoc.jar:JavaMoc2.jar -d tmp \
+              MocBench.java XSMocBench.java SMoc1.java
+	cd tmp; jar xf ../xmoc.jar; jar xf ../JavaMoc2.jar; \
+                jar cfe ../$@ XSMocBench .
+	rm -rf tmp
+
 xmoc.jar: $(XMOC_SRC)
 	rm -rf tmp
 	mkdir -p tmp
@@ -78,9 +91,7 @@ xmoc.jar: $(XMOC_SRC)
 
 
 clean:
-	rm -rf tmp
-	rm -f mocbench1.jar mocbench2.jar xmocbench.jar
-	rm -f xmoc.jar
+	rm -rf tmp $(BUILT_JARS)
 	rm -f profile1.html profile2.html
 	rm -f HealpixMocBench.fits SMocBench.fits
 
