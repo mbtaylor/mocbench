@@ -13,8 +13,7 @@ public class ArraysMoc {
         sortedIndexArrays_ = sortedIndexArrays;
     }
 
-    // ??? more like getMaxLevel
-    public int getLevelCount() {
+    public int getMaxLevel() {
         return sortedIndexArrays_.length - 1;
     }
 
