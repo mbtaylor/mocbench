@@ -5,7 +5,7 @@
 # working libasyncProfiler.so gets downloaded.
 
 COUNT = 10_000_000
-ORDER = 10
+ORDER = 14
 
 BUILT_JARS = mocbench1.jar mocbench2.jar xmocbench.jar xsmocbench.jar xmoc.jar
 
@@ -16,17 +16,18 @@ XMOC_SRC = xmoc/ArraysMoc.java \
            xmoc/IntegerBag.java \
            xmoc/LongBag.java \
            xmoc/MocBuilder.java \
+           xmoc/MultiBitSetBag.java \
            xmoc/PrimitiveList.java \
            xmoc/LongList.java \
 
 run: build
-	java -jar xmocbench.jar -order $(ORDER) -count $(COUNT)
+	java -jar xmocbench.jar -order $(ORDER) -count $(COUNT) || true
 	@echo
-	java -jar xsmocbench.jar -order $(ORDER) -count $(COUNT)
+	java -jar xsmocbench.jar -order $(ORDER) -count $(COUNT) || true
 	@echo
-	java -jar mocbench1.jar -order $(ORDER) -count $(COUNT)
+	java -jar mocbench1.jar -order $(ORDER) -count $(COUNT) || true
 	@echo
-	java -jar mocbench2.jar -order $(ORDER) -count $(COUNT)
+	java -jar mocbench2.jar -order $(ORDER) -count $(COUNT) || true
 
 runflame: profile1.html profile2.html
 

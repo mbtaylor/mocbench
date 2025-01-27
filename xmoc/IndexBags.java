@@ -9,11 +9,14 @@ public class IndexBags {
         else if ( size < 8 * 2_000_000 ) {
             return new BitSetBag( (int) size );
         }
-        else if ( size < Integer.MAX_VALUE ) {
-            return new IntegerBag( (int) size, SET_SIZE_THRESHOLD ); 
-        }
         else {
-            return new LongBag( size, SET_SIZE_THRESHOLD );
+            return new MultiBitSetBag( size );
         }
+    //  else if ( size < Integer.MAX_VALUE ) {
+    //      return new IntegerBag( (int) size, SET_SIZE_THRESHOLD ); 
+    //  }
+    //  else {
+    //      return new LongBag( size, SET_SIZE_THRESHOLD );
+    //  }
     }
 }
